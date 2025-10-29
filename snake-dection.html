@@ -1,0 +1,1785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake Detection System - AI-Powered Snake Monitoring</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+     /* Primitive Color Tokens */
+     --color-white: rgba(255, 255, 255, 1);
+     --color-black: rgba(0, 0, 0, 1);
+     --color-cream-50: rgba(252, 252, 249, 1);
+     --color-cream-100: rgba(255, 255, 253, 1);
+     --color-gray-200: rgba(245, 245, 245, 1);
+     --color-gray-300: rgba(167, 169, 169, 1);
+     --color-gray-400: rgba(119, 124, 124, 1);
+     --color-slate-500: rgba(98, 108, 113, 1);
+     --color-brown-600: rgba(94, 82, 64, 1);
+     --color-charcoal-700: rgba(31, 33, 33, 1);
+     --color-charcoal-800: rgba(38, 40, 40, 1);
+     --color-slate-900: rgba(19, 52, 59, 1);
+     --color-teal-300: rgba(50, 184, 198, 1);
+     --color-teal-400: rgba(45, 166, 178, 1);
+     --color-teal-500: rgba(33, 128, 141, 1);
+     --color-teal-600: rgba(29, 116, 128, 1);
+     --color-teal-700: rgba(26, 104, 115, 1);
+     --color-teal-800: rgba(41, 150, 161, 1);
+     --color-red-400: rgba(255, 84, 89, 1);
+     --color-red-500: rgba(192, 21, 47, 1);
+     --color-orange-400: rgba(230, 129, 97, 1);
+     --color-orange-500: rgba(168, 75, 47, 1);
+
+     /* RGB versions for opacity control */
+     --color-brown-600-rgb: 94, 82, 64;
+     --color-teal-500-rgb: 33, 128, 141;
+     --color-slate-900-rgb: 19, 52, 59;
+     --color-slate-500-rgb: 98, 108, 113;
+     --color-red-500-rgb: 192, 21, 47;
+     --color-red-400-rgb: 255, 84, 89;
+     --color-orange-500-rgb: 168, 75, 47;
+     --color-orange-400-rgb: 230, 129, 97;
+
+     /* Background color tokens (Light Mode) */
+     --color-bg-1: rgba(59, 130, 246, 0.08);
+     --color-bg-2: rgba(245, 158, 11, 0.08);
+     --color-bg-3: rgba(34, 197, 94, 0.08);
+     --color-bg-4: rgba(239, 68, 68, 0.08);
+     --color-bg-5: rgba(147, 51, 234, 0.08);
+     --color-bg-6: rgba(249, 115, 22, 0.08);
+     --color-bg-7: rgba(236, 72, 153, 0.08);
+     --color-bg-8: rgba(6, 182, 212, 0.08);
+
+     /* Semantic Color Tokens (Light Mode) */
+     --color-background: var(--color-cream-50);
+     --color-surface: var(--color-cream-100);
+     --color-text: var(--color-slate-900);
+     --color-text-secondary: var(--color-slate-500);
+     --color-primary: var(--color-teal-500);
+     --color-primary-hover: var(--color-teal-600);
+     --color-primary-active: var(--color-teal-700);
+     --color-secondary: rgba(var(--color-brown-600-rgb), 0.12);
+     --color-secondary-hover: rgba(var(--color-brown-600-rgb), 0.2);
+     --color-secondary-active: rgba(var(--color-brown-600-rgb), 0.25);
+     --color-border: rgba(var(--color-brown-600-rgb), 0.2);
+     --color-btn-primary-text: var(--color-cream-50);
+     --color-card-border: rgba(var(--color-brown-600-rgb), 0.12);
+     --color-card-border-inner: rgba(var(--color-brown-600-rgb), 0.12);
+     --color-error: var(--color-red-500);
+     --color-success: var(--color-teal-500);
+     --color-warning: var(--color-orange-500);
+     --color-info: var(--color-slate-500);
+     --color-focus-ring: rgba(var(--color-teal-500-rgb), 0.4);
+     --color-select-caret: rgba(var(--color-slate-900-rgb), 0.8);
+
+     /* Common style patterns */
+     --focus-ring: 0 0 0 3px var(--color-focus-ring);
+     --focus-outline: 2px solid var(--color-primary);
+     --status-bg-opacity: 0.15;
+     --status-border-opacity: 0.25;
+     --select-caret-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23134252' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+     --select-caret-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23f5f5f5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+
+     /* RGB versions for opacity control */
+     --color-success-rgb: 33, 128, 141;
+     --color-error-rgb: 192, 21, 47;
+     --color-warning-rgb: 168, 75, 47;
+     --color-info-rgb: 98, 108, 113;
+
+     /* Typography */
+     --font-family-base: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+     --font-family-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+     --font-size-xs: 11px;
+     --font-size-sm: 12px;
+     --font-size-base: 14px;
+     --font-size-md: 14px;
+     --font-size-lg: 16px;
+     --font-size-xl: 18px;
+     --font-size-2xl: 20px;
+     --font-size-3xl: 24px;
+     --font-size-4xl: 30px;
+     --font-weight-normal: 400;
+     --font-weight-medium: 500;
+     --font-weight-semibold: 550;
+     --font-weight-bold: 600;
+     --line-height-tight: 1.2;
+     --line-height-normal: 1.5;
+     --letter-spacing-tight: -0.01em;
+
+     /* Spacing */
+     --space-0: 0;
+     --space-1: 1px;
+     --space-2: 2px;
+     --space-4: 4px;
+     --space-6: 6px;
+     --space-8: 8px;
+     --space-10: 10px;
+     --space-12: 12px;
+     --space-16: 16px;
+     --space-20: 20px;
+     --space-24: 24px;
+     --space-32: 32px;
+
+     /* Border Radius */
+     --radius-sm: 6px;
+     --radius-base: 8px;
+     --radius-md: 10px;
+     --radius-lg: 12px;
+     --radius-full: 9999px;
+
+     /* Shadows */
+     --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.02);
+     --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+     --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.04), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+     --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+     --shadow-inset-sm: inset 0 1px 0 rgba(255, 255, 255, 0.15), inset 0 -1px 0 rgba(0, 0, 0, 0.03);
+
+     /* Animation */
+     --duration-fast: 150ms;
+     --duration-normal: 250ms;
+     --ease-standard: cubic-bezier(0.16, 1, 0.3, 1);
+
+     /* Layout */
+     --container-sm: 640px;
+     --container-md: 768px;
+     --container-lg: 1024px;
+     --container-xl: 1280px;
+    }
+
+    /* Dark mode colors */
+    @media (prefers-color-scheme: dark) {
+     :root {
+     --color-gray-400-rgb: 119, 124, 124;
+     --color-teal-300-rgb: 50, 184, 198;
+     --color-gray-300-rgb: 167, 169, 169;
+     --color-gray-200-rgb: 245, 245, 245;
+
+     --color-bg-1: rgba(29, 78, 216, 0.15);
+     --color-bg-2: rgba(180, 83, 9, 0.15);
+     --color-bg-3: rgba(21, 128, 61, 0.15);
+     --color-bg-4: rgba(185, 28, 28, 0.15);
+     --color-bg-5: rgba(107, 33, 168, 0.15);
+     --color-bg-6: rgba(194, 65, 12, 0.15);
+     --color-bg-7: rgba(190, 24, 93, 0.15);
+     --color-bg-8: rgba(8, 145, 178, 0.15);
+
+     --color-background: var(--color-charcoal-700);
+     --color-surface: var(--color-charcoal-800);
+     --color-text: var(--color-gray-200);
+     --color-text-secondary: rgba(var(--color-gray-300-rgb), 0.7);
+     --color-primary: var(--color-teal-300);
+     --color-primary-hover: var(--color-teal-400);
+     --color-primary-active: var(--color-teal-800);
+     --color-secondary: rgba(var(--color-gray-400-rgb), 0.15);
+     --color-secondary-hover: rgba(var(--color-gray-400-rgb), 0.25);
+     --color-secondary-active: rgba(var(--color-gray-400-rgb), 0.3);
+     --color-border: rgba(var(--color-gray-400-rgb), 0.3);
+     --color-error: var(--color-red-400);
+     --color-success: var(--color-teal-300);
+     --color-warning: var(--color-orange-400);
+     --color-info: var(--color-gray-300);
+     --color-focus-ring: rgba(var(--color-teal-300-rgb), 0.4);
+     --color-btn-primary-text: var(--color-slate-900);
+     --color-card-border: rgba(var(--color-gray-400-rgb), 0.2);
+     --color-card-border-inner: rgba(var(--color-gray-400-rgb), 0.15);
+     --shadow-inset-sm: inset 0 1px 0 rgba(255, 255, 255, 0.1), inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+     --color-border-secondary: rgba(var(--color-gray-400-rgb), 0.2);
+     --color-select-caret: rgba(var(--color-gray-200-rgb), 0.8);
+
+     --color-success-rgb: var(--color-teal-300-rgb);
+     --color-error-rgb: var(--color-red-400-rgb);
+     --color-warning-rgb: var(--color-orange-400-rgb);
+     --color-info-rgb: var(--color-gray-300-rgb);
+     }
+    }
+
+    /* Base styles */
+    html {
+     font-size: var(--font-size-base);
+     font-family: var(--font-family-base);
+     line-height: var(--line-height-normal);
+     color: var(--color-text);
+     background-color: var(--color-background);
+     -webkit-font-smoothing: antialiased;
+     box-sizing: border-box;
+    }
+
+    body {
+     margin: 0;
+     padding: 0;
+    }
+
+    *, *::before, *::after {
+     box-sizing: inherit;
+    }
+
+    /* Typography */
+    h1, h2, h3, h4, h5, h6 {
+     margin: 0;
+     font-weight: var(--font-weight-semibold);
+     line-height: var(--line-height-tight);
+     color: var(--color-text);
+     letter-spacing: var(--letter-spacing-tight);
+    }
+
+    h1 { font-size: var(--font-size-4xl); }
+    h2 { font-size: var(--font-size-3xl); }
+    h3 { font-size: var(--font-size-2xl); }
+    h4 { font-size: var(--font-size-xl); }
+    h5 { font-size: var(--font-size-lg); }
+    h6 { font-size: var(--font-size-md); }
+
+    p {
+     margin: 0 0 var(--space-16) 0;
+    }
+
+    a {
+     color: var(--color-primary);
+     text-decoration: none;
+     transition: color var(--duration-fast) var(--ease-standard);
+    }
+
+    a:hover {
+     color: var(--color-primary-hover);
+    }
+
+    /* Buttons */
+    .btn {
+     display: inline-flex;
+     align-items: center;
+     justify-content: center;
+     padding: var(--space-8) var(--space-16);
+     border-radius: var(--radius-base);
+     font-size: var(--font-size-base);
+     font-weight: 500;
+     line-height: 1.5;
+     cursor: pointer;
+     transition: all var(--duration-normal) var(--ease-standard);
+     border: none;
+     text-decoration: none;
+     position: relative;
+    }
+
+    .btn:focus-visible {
+     outline: none;
+     box-shadow: var(--focus-ring);
+    }
+
+    .btn--primary {
+     background: var(--color-primary);
+     color: var(--color-btn-primary-text);
+    }
+
+    .btn--primary:hover {
+     background: var(--color-primary-hover);
+    }
+
+    .btn--secondary {
+     background: var(--color-secondary);
+     color: var(--color-text);
+    }
+
+    .btn--secondary:hover {
+     background: var(--color-secondary-hover);
+    }
+
+    .btn--outline {
+     background: transparent;
+     border: 1px solid var(--color-border);
+     color: var(--color-text);
+    }
+
+    .btn--outline:hover {
+     background: var(--color-secondary);
+    }
+
+    .btn--sm {
+     padding: var(--space-4) var(--space-12);
+     font-size: var(--font-size-sm);
+    }
+
+    .btn--danger {
+     background: var(--color-error);
+     color: var(--color-white);
+    }
+
+    .btn--success {
+     background: var(--color-success);
+     color: var(--color-white);
+    }
+
+    /* Form elements */
+    .form-control {
+     display: block;
+     width: 100%;
+     padding: var(--space-8) var(--space-12);
+     font-size: var(--font-size-md);
+     line-height: 1.5;
+     color: var(--color-text);
+     background-color: var(--color-surface);
+     border: 1px solid var(--color-border);
+     border-radius: var(--radius-base);
+     transition: border-color var(--duration-fast) var(--ease-standard), box-shadow var(--duration-fast) var(--ease-standard);
+    }
+
+    .form-control:focus {
+     border-color: var(--color-primary);
+     outline: var(--focus-outline);
+    }
+
+    .form-label {
+     display: block;
+     margin-bottom: var(--space-8);
+     font-weight: var(--font-weight-medium);
+     font-size: var(--font-size-sm);
+    }
+
+    .form-group {
+     margin-bottom: var(--space-16);
+    }
+
+    /* Card component */
+    .card {
+     background-color: var(--color-surface);
+     border-radius: var(--radius-lg);
+     border: 1px solid var(--color-card-border);
+     box-shadow: var(--shadow-sm);
+     overflow: hidden;
+     transition: box-shadow var(--duration-normal) var(--ease-standard);
+    }
+
+    .card:hover {
+     box-shadow: var(--shadow-md);
+    }
+
+    .card__body {
+     padding: var(--space-16);
+    }
+
+    .card__header {
+     padding: var(--space-16);
+     border-bottom: 1px solid var(--color-card-border-inner);
+    }
+
+    /* Status indicators */
+    .status {
+     display: inline-flex;
+     align-items: center;
+     padding: var(--space-6) var(--space-12);
+     border-radius: var(--radius-full);
+     font-weight: var(--font-weight-medium);
+     font-size: var(--font-size-sm);
+    }
+
+    .status--success {
+     background-color: rgba(var(--color-success-rgb), var(--status-bg-opacity));
+     color: var(--color-success);
+     border: 1px solid rgba(var(--color-success-rgb), var(--status-border-opacity));
+    }
+
+    .status--error {
+     background-color: rgba(var(--color-error-rgb), var(--status-bg-opacity));
+     color: var(--color-error);
+     border: 1px solid rgba(var(--color-error-rgb), var(--status-border-opacity));
+    }
+
+    .status--warning {
+     background-color: rgba(var(--color-warning-rgb), var(--status-bg-opacity));
+     color: var(--color-warning);
+     border: 1px solid rgba(var(--color-warning-rgb), var(--status-border-opacity));
+    }
+
+    /* Layout */
+    .app {
+     display: flex;
+     min-height: 100vh;
+    }
+
+    .sidebar {
+     width: 250px;
+     background: var(--color-surface);
+     border-right: 1px solid var(--color-border);
+     padding: var(--space-16);
+     position: fixed;
+     height: 100vh;
+     overflow-y: auto;
+     transition: transform var(--duration-normal) var(--ease-standard); /* Added transition for desktop too */
+    }
+
+    .main-content {
+     flex: 1;
+     margin-left: 250px;
+     padding: var(--space-24);
+     transition: margin-left var(--duration-normal) var(--ease-standard); /* Added transition */
+    }
+
+    .nav-item {
+     display: flex;
+     align-items: center;
+     padding: var(--space-12) var(--space-16);
+     margin-bottom: var(--space-8);
+     border-radius: var(--radius-base);
+     color: var(--color-text-secondary);
+     cursor: pointer;
+     transition: all var(--duration-fast) var(--ease-standard);
+    }
+
+    .nav-item:hover {
+     background: var(--color-secondary);
+     color: var(--color-text);
+    }
+
+    .nav-item.active {
+     background: var(--color-primary);
+     color: var(--color-btn-primary-text);
+    }
+
+    .nav-item i {
+     margin-right: var(--space-12);
+     width: 20px;
+    }
+
+    /* Page sections */
+    .page {
+     display: none;
+    }
+
+    .page.active {
+     display: block;
+    }
+
+    .page-header {
+     margin-bottom: var(--space-32);
+    }
+
+    .page-title {
+     font-size: var(--font-size-3xl);
+     margin-bottom: var(--space-8);
+    }
+
+    .page-subtitle {
+     color: var(--color-text-secondary);
+     font-size: var(--font-size-lg);
+    }
+
+    /* Grid layouts */
+    .grid {
+     display: grid;
+     gap: var(--space-24);
+    }
+
+    .grid--2 {
+     grid-template-columns: repeat(2, 1fr);
+    }
+
+    .grid--3 {
+     grid-template-columns: repeat(3, 1fr);
+    }
+
+    .grid--4 {
+     grid-template-columns: repeat(4, 1fr);
+    }
+
+    /* Stats cards */
+    .stat-card {
+     background: var(--color-surface);
+     border: 1px solid var(--color-card-border);
+     border-radius: var(--radius-lg);
+     padding: var(--space-20);
+     text-align: center;
+    }
+
+    .stat-value {
+     font-size: var(--font-size-3xl);
+     font-weight: var(--font-weight-bold);
+     color: var(--color-primary);
+     margin-bottom: var(--space-8);
+    }
+
+    .stat-label {
+     color: var(--color-text-secondary);
+     font-size: var(--font-size-sm);
+    }
+
+    /* Upload area */
+    .upload-area {
+     border: 2px dashed var(--color-border);
+     border-radius: var(--radius-lg);
+     padding: var(--space-32);
+     text-align: center;
+     transition: border-color var(--duration-fast) var(--ease-standard);
+     cursor: pointer;
+    }
+
+    .upload-area:hover {
+     border-color: var(--color-primary);
+    }
+
+    .upload-area.dragover {
+     border-color: var(--color-primary);
+     background: var(--color-bg-1);
+    }
+
+    .upload-icon {
+     font-size: var(--font-size-4xl);
+     color: var(--color-text-secondary);
+     margin-bottom: var(--space-16);
+    }
+
+    /* Progress bars */
+    .progress {
+     width: 100%;
+     height: 8px;
+     background: var(--color-secondary);
+     border-radius: var(--radius-full);
+     overflow: hidden;
+    }
+
+    .progress-bar {
+     height: 100%;
+     background: var(--color-primary);
+     border-radius: var(--radius-full);
+     transition: width var(--duration-normal) var(--ease-standard);
+    }
+
+    /* Video player */
+    .video-container {
+     position: relative;
+     background: var(--color-black);
+     border-radius: var(--radius-lg);
+     overflow: hidden;
+    }
+
+    .video-player {
+     width: 100%;
+     height: 400px;
+     background: var(--color-black);
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     color: var(--color-white);
+     font-size: var(--font-size-lg);
+    }
+
+    .detection-overlay {
+     position: absolute;
+     top: 0;
+     left: 0;
+     width: 100%;
+     height: 100%;
+     pointer-events: none;
+    }
+
+    .detection-box {
+     position: absolute;
+     border: 2px solid var(--color-error);
+     background: rgba(var(--color-error-rgb), 0.1);
+     border-radius: var(--radius-sm);
+    }
+
+    .detection-label {
+     position: absolute;
+     top: -24px;
+     left: 0;
+     background: var(--color-error);
+     color: var(--color-white);
+     padding: var(--space-2) var(--space-8);
+     border-radius: var(--radius-sm);
+     font-size: var(--font-size-xs);
+     font-weight: var(--font-weight-medium);
+    }
+
+    /* Feed status */
+    .feed-status {
+     display: flex;
+     align-items: center;
+     gap: var(--space-8);
+     margin-bottom: var(--space-16);
+    }
+
+    .status-dot {
+     width: 8px;
+     height: 8px;
+     border-radius: 50%;
+     background: var(--color-success);
+    }
+
+    .status-dot--inactive {
+     background: var(--color-error);
+    }
+
+    /* History table */
+    .history-table {
+     width: 100%;
+     border-collapse: collapse;
+     margin-top: var(--space-16);
+    }
+
+    .history-table th,
+    .history-table td {
+     padding: var(--space-12) var(--space-16);
+     text-align: left;
+     border-bottom: 1px solid var(--color-border);
+    }
+
+    .history-table th {
+     background: var(--color-surface);
+     font-weight: var(--font-weight-medium);
+     color: var(--color-text-secondary);
+     font-size: var(--font-size-sm);
+    }
+
+    .history-table tr:hover {
+     background: var(--color-bg-1);
+    }
+
+    .detection-thumbnail {
+     width: 50px;
+     height: 50px;
+     object-fit: cover;
+     border-radius: var(--radius-sm);
+     background: var(--color-secondary);
+    }
+
+    /* Alert notifications */
+    .alert {
+     padding: var(--space-16);
+     border-radius: var(--radius-base);
+     margin-bottom: var(--space-16);
+     border: 1px solid;
+    }
+
+    .alert--success {
+     background: rgba(var(--color-success-rgb), 0.1);
+     border-color: var(--color-success);
+     color: var(--color-success);
+    }
+
+    .alert--warning {
+     background: rgba(var(--color-warning-rgb), 0.1);
+     border-color: var(--color-warning);
+     color: var(--color-warning);
+    }
+
+    .alert--error {
+     background: rgba(var(--color-error-rgb), 0.1);
+     border-color: var(--color-error);
+     color: var(--color-error);
+    }
+
+    /* Toggle switch */
+    .toggle {
+     position: relative;
+     display: inline-block;
+     width: 48px;
+     height: 24px;
+    }
+
+    .toggle input {
+     opacity: 0;
+     width: 0;
+     height: 0;
+    }
+
+    .toggle-slider {
+     position: absolute;
+     cursor: pointer;
+     top: 0;
+     left: 0;
+     right: 0;
+     bottom: 0;
+     background-color: var(--color-secondary);
+     transition: var(--duration-normal);
+     border-radius: var(--radius-full);
+    }
+
+    .toggle-slider:before {
+     position: absolute;
+     content: "";
+     height: 18px;
+     width: 18px;
+     left: 3px;
+     bottom: 3px;
+     background-color: var(--color-white);
+     transition: var(--duration-normal);
+     border-radius: 50%;
+    }
+
+    .toggle input:checked + .toggle-slider {
+     background-color: var(--color-primary);
+    }
+
+    .toggle input:checked + .toggle-slider:before {
+     transform: translateX(24px);
+    }
+
+    /* Utility classes */
+    .flex {
+     display: flex;
+    }
+
+    .flex-col {
+     flex-direction: column;
+    }
+
+    .items-center {
+     align-items: center;
+    }
+
+    .justify-center {
+     justify-content: center;
+    }
+
+    .justify-between {
+     justify-content: space-between;
+    }
+
+    .gap-8 {
+     gap: var(--space-8);
+    }
+
+    .gap-16 {
+     gap: var(--space-16);
+    }
+
+    .mt-16 {
+     margin-top: var(--space-16);
+    }
+
+    .mb-16 {
+     margin-bottom: var(--space-16);
+    }
+
+    .text-center {
+     text-align: center;
+    }
+
+    .hidden {
+     display: none;
+    }
+
+    /* --- NEW RESPONSIVE STYLES --- */
+    .mobile-menu-toggle {
+        display: none; /* Hidden by default on desktop */
+        position: fixed;
+        top: 16px;
+        left: 16px;
+        z-index: 1001;
+        padding: var(--space-8) var(--space-12);
+        border-radius: var(--radius-base);
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        color: var(--color-text);
+        cursor: pointer;
+        box-shadow: var(--shadow-md);
+    }
+
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999; /* Below sidebar, above content */
+    }
+
+    .sidebar-overlay.open {
+        display: block;
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+     .mobile-menu-toggle {
+         display: block; /* Show menu button on mobile */
+     }
+
+     .sidebar {
+         transform: translateX(-100%);
+         transition: transform var(--duration-normal) var(--ease-standard);
+         position: fixed; /* Make it fixed to slide over content */
+         z-index: 1000; /* Ensure sidebar is on top */
+     }
+    
+     .sidebar.open {
+         transform: translateX(0);
+     }
+    
+     .main-content {
+         margin-left: 0;
+         padding-top: 80px; /* Add padding to avoid content being hidden by the fixed button */
+     }
+    
+     .grid--2,
+     .grid--3,
+     .grid--4 {
+         grid-template-columns: 1fr;
+     }
+
+     .page-title {
+         font-size: var(--font-size-2xl);
+     }
+    }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <nav class="sidebar" id="sidebar">
+            <div class="nav-brand">
+                <h2><i class="fas fa-snake"></i> Snake Detection</h2>
+            </div>
+            
+            <div class="nav-menu">
+                <div class="nav-item active" data-page="dashboard">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Dashboard</span>
+                </div>
+                <div class="nav-item" data-page="upload">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <span>Upload Files</span>
+                </div>
+                <div class="nav-item" data-page="live-feed">
+                    <i class="fas fa-video"></i>
+                    <span>Live Feeds</span>
+                </div>
+                <div class="nav-item" data-page="train">
+                    <i class="fas fa-brain"></i>
+                    <span>Train Model</span>
+                </div>
+                <div class="nav-item" data-page="alerts">
+                    <i class="fas fa-bell"></i>
+                    <span>Alerts</span>
+                </div>
+                <div class="nav-item" data-page="history">
+                    <i class="fas fa-history"></i>
+                    <span>Detection History</span>
+                </div>
+                <div class="nav-item" data-page="settings">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </div>
+            </div>
+        </nav>
+
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <main class="main-content">
+            <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <div class="page active" id="dashboard">
+                <div class="page-header">
+                    <h1 class="page-title">Dashboard</h1>
+                    <p class="page-subtitle">System overview &amp; recent activity</p>
+                </div>
+
+                <div class="grid grid--4">
+                    <div class="stat-card">
+                        <div class="stat-value">145</div>
+                        <div class="stat-label">Total Detections</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">3</div>
+                        <div class="stat-label">Active Feeds</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">94%</div>
+                        <div class="stat-label">Model Accuracy</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">15d</div>
+                        <div class="stat-label">System Uptime</div>
+                    </div>
+                </div>
+
+                <div class="grid grid--2 mt-16">
+                    <div class="card">
+                        <div class="card__header">
+                            <h3>Recent Detections</h3>
+                        </div>
+                        <div class="card__body">
+                            <div class="detection-item" style="display: flex; align-items: center; gap: var(--space-12); padding: var(--space-12) 0; border-bottom: 1px solid var(--color-border);">
+                                <div class="detection-thumbnail" style="background: var(--color-bg-4);"></div>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: var(--font-weight-medium);">Venomous Snake</div>
+                                    <div style="color: var(--color-text-secondary); font-size: var(--font-size-sm);">Backyard Camera - 94% confidence</div>
+                                    <div style="color: var(--color-text-secondary); font-size: var(--font-size-xs);">Oct 14, 2024 8:15 PM</div>
+                                </div>
+                                <span class="status status--error">High Risk</span>
+                            </div>
+                            <div class="detection-item" style="display: flex; align-items: center; gap: var(--space-12); padding: var(--space-12) 0; border-bottom: 1px solid var(--color-border);">
+                                <div class="detection-thumbnail" style="background: var(--color-bg-2);"></div>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: var(--font-weight-medium);">Non-venomous Snake</div>
+                                    <div style="color: var(--color-text-secondary); font-size: var(--font-size-sm);">Garden Camera - 89% confidence</div>
+                                    <div style="color: var(--color-text-secondary); font-size: var(--font-size-xs);">Oct 15, 2024 9:30 AM</div>
+                                </div>
+                                <span class="status status--success">Low Risk</span>
+                            </div>
+                            <div class="detection-item" style="display: flex; align-items: center; gap: var(--space-12); padding: var(--space-12) 0;">
+                                <div class="detection-thumbnail" style="background: var(--color-bg-6);"></div>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: var(--font-weight-medium);">Snake</div>
+                                    <div style="color: var(--color-text-secondary); font-size: var(--font-size-sm);">Front Door Camera - 76% confidence</div>
+                                    <div style="color: var(--color-text-secondary); font-size: var(--font-size-xs);">Oct 15, 2024 2:22 PM</div>
+                                </div>
+                                <span class="status status--warning">Medium Risk</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card__header">
+                            <h3>System Health</h3>
+                        </div>
+                        <div class="card__body">
+                            <div style="margin-bottom: var(--space-16);">
+                                <div class="flex justify-between items-center" style="margin-bottom: var(--space-8);">
+                                    <span>Model Status</span>
+                                    <span class="status status--success">Loaded</span>
+                                </div>
+                                <div class="flex justify-between items-center" style="margin-bottom: var(--space-8);">
+                                    <span>Detection Service</span>
+                                    <span class="status status--success">Running</span>
+                                </div>
+                                <div class="flex justify-between items-center" style="margin-bottom: var(--space-8);">
+                                    <span>Alert System</span>
+                                    <span class="status status--success">Active</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span>Last Training</span>
+                                    <span style="color: var(--color-text-secondary);">Oct 10, 2024</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page" id="upload">
+                <div class="page-header">
+                    <h1 class="page-title">Upload Files</h1>
+                    <p class="page-subtitle">Upload videos or images for snake detection</p>
+                </div>
+
+                <div class="grid grid--2">
+                    <div class="card">
+                        <div class="card__header">
+                            <h3>Upload Media Files</h3>
+                        </div>
+                        <div class="card__body">
+                            <div class="upload-area" id="uploadArea">
+                                <div class="upload-icon">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                </div>
+                                <h4>Drag &amp; drop files here</h4>
+                                <p style="color: var(--color-text-secondary);">or <a href="#" onclick="document.getElementById('fileInput').click(); return false;">browse files</a></p>
+                                <p style="color: var(--color-text-secondary); font-size: var(--font-size-sm);">Supported formats: MP4, AVI, MOV, JPG, PNG (Max: 100MB)</p>
+                            </div>
+                            <input type="file" id="fileInput" multiple accept=".mp4,.avi,.mov,.jpg,.jpeg,.png" style="display: none;">
+                            
+                            <div id="uploadProgress" class="mt-16 hidden">
+                                <div class="flex justify-between items-center" style="margin-bottom: var(--space-8);">
+                                    <span>Uploading...</span>
+                                    <span id="progressText">0%</span>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar" id="progressBar" style="width: 0%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card__header">
+                            <h3>Recent Uploads</h3>
+                        </div>
+                        <div class="card__body">
+                            <div class="upload-history">
+                                <div style="display: flex; align-items: center; gap: var(--space-12); padding: var(--space-12) 0; border-bottom: 1px solid var(--color-border);">
+                                    <i class="fas fa-file-video" style="color: var(--color-primary);"></i>
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: var(--font-weight-medium);">garden_footage.mp4</div>
+                                        <div style="color: var(--color-text-secondary); font-size: var(--font-size-sm);">15.2 MB - Processed</div>
+                                    </div>
+                                    <span class="status status--success">Complete</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: var(--space-12); padding: var(--space-12) 0; border-bottom: 1px solid var(--color-border);">
+                                    <i class="fas fa-file-image" style="color: var(--color-warning);"></i>
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: var(--font-weight-medium);">snake_sample.jpg</div>
+                                        <div style="color: var(--color-text-secondary); font-size: var(--font-size-sm);">2.1 MB - Processing</div>
+                                    </div>
+                                    <span class="status status--warning">Processing</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: var(--space-12); padding: var(--space-12) 0;">
+                                    <i class="fas fa-file-video" style="color: var(--color-primary);"></i>
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: var(--font-weight-medium);">backyard_cam.avi</div>
+                                        <div style="color: var(--color-text-secondary); font-size: var(--font-size-sm);">42.8 MB - Processed</div>
+                                    </div>
+                                    <span class="status status--success">Complete</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page" id="live-feed">
+                <div class="page-header">
+                    <h1 class="page-title">Live Feeds</h1>
+                    <p class="page-subtitle">Monitor CCTV cameras in real-time</p>
+                </div>
+
+                <div class="card mb-16">
+                    <div class="card__header">
+                        <h3>Add New Camera Feed</h3>
+                    </div>
+                    <div class="card__body">
+                        <div class="grid grid--3">
+                            <div class="form-group">
+                                <label class="form-label">Camera Name</label>
+                                <input type="text" class="form-control" placeholder="e.g., Garden Camera" id="cameraName">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Stream URL</label>
+                                <input type="url" class="form-control" placeholder="rtsp://192.168.1.100:554/stream" id="streamUrl">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">&nbsp;</label>
+                                <button class="btn btn--primary" onclick="addCameraFeed()">Add Camera</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid--2">
+                    <div class="card">
+                        <div class="card__header">
+                            <div class="flex justify-between items-center">
+                                <h4>Garden Camera</h4>
+                                <div class="feed-status">
+                                    <div class="status-dot"></div>
+                                    <span style="color: var(--color-success);">Active</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card__body">
+                            <div class="video-container">
+                                <div class="video-player">
+                                    <i class="fas fa-play-circle" style="font-size: var(--font-size-4xl); margin-right: var(--space-12);"></i>
+                                    Live Feed - Garden Camera
+                                </div>
+                                <div class="detection-overlay">
+                                    </div>
+                            </div>
+                            <div class="mt-16">
+                                <div class="flex justify-between items-center">
+                                    <span>Last Detection:</span>
+                                    <span style="color: var(--color-text-secondary);">Oct 15, 9:30 AM</span>
+                                </div>
+                                <div class="flex justify-between items-center mt-8">
+                                    <span>Resolution:</span>
+                                    <span style="color: var(--color-text-secondary);">1920x1080</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card__header">
+                            <div class="flex justify-between items-center">
+                                <h4>Front Door Camera</h4>
+                                <div class="feed-status">
+                                    <div class="status-dot"></div>
+                                    <span style="color: var(--color-success);">Active</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card__body">
+                            <div class="video-container">
+                                <div class="video-player">
+                                    <i class="fas fa-play-circle" style="font-size: var(--font-size-4xl); margin-right: var(--space-12);"></i>
+                                    Live Feed - Front Door Camera
+                                </div>
+                            </div>
+                            <div class="mt-16">
+                                <div class="flex justify-between items-center">
+                                    <span>Last Detection:</span>
+                                    <span style="color: var(--color-text-secondary);">Oct 15, 2:22 PM</span>
+                                </div>
+                                <div class="flex justify-between items-center mt-8">
+                                    <span>Resolution:</span>
+                                    <span style="color: var(--color-text-secondary);">1280x720</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page" id="train">
+                <div class="page-header">
+                    <h1 class="page-title">Train Model</h1>
+                    <p class="page-subtitle">Improve detection accuracy with custom training data</p>
+                </div>
+
+                <div class="grid grid--2">
+                    <div class="card">
+                        <div class="card__header">
+                            <h3>Upload Training Data</h3>
+                        </div>
+                        <div class="card__body">
+                            <div class="form-group">
+                                <label class="form-label">Data Type</label>
+                                <select class="form-control">
+                                    <option>Snake Images</option>
+                                    <option>Non-Snake Images</option>
+                                    <option>Venomous Snake Images</option>
+                                </select>
+                            </div>
+                            <div class="upload-area" style="margin-bottom: var(--space-16);">
+                                <div class="upload-icon">
+                                    <i class="fas fa-images"></i>
+                                </div>
+                                <h4>Upload Training Images</h4>
+                                <p style="color: var(--color-text-secondary);">JPG, PNG files only</p>
+                            </div>
+                            <button class="btn btn--primary btn--full-width" onclick="startTraining()">Start Training</button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card__header">
+                            <h3>Training Progress</h3>
+                        </div>
+                        <div class="card__body">
+                            <div class="training-status">
+                                <div class="flex justify-between items-center" style="margin-bottom: var(--space-16);">
+                                    <span>Current Model:</span>
+                                    <span class="status status--success">YOLOv8 Snake Detection</span>
+                                </div>
+                                <div style="margin-bottom: var(--space-16);">
+                                    <div class="flex justify-between items-center" style="margin-bottom: var(--space-8);">
+                                        <span>Training Progress:</span>
+                                        <span id="trainingProgress">Not Started</span>
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar" id="trainingBar" style="width: 0%;"></div>
+                                    </div>
+                                </div>
+                                <div class="training-stats">
+                                    <div class="flex justify-between" style="margin-bottom: var(--space-8);">
+                                        <span>Total Images:</span>
+                                        <span>2,500</span>
+                                    </div>
+                                    <div class="flex justify-between" style="margin-bottom: var(--space-8);">
+                                        <span>Snake Images:</span>
+                                        <span>1,200</span>
+                                    </div>
+                                    <div class="flex justify-between" style="margin-bottom: var(--space-8);">
+                                        <span>Current Accuracy:</span>
+                                        <span>94%</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span>Last Training:</span>
+                                        <span>Oct 10, 2024</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page" id="alerts">
+                <div class="page-header">
+                    <h1 class="page-title">Alert Management</h1>
+                    <p class="page-subtitle">Configure notifications &amp; view alert history</p>
+                </div>
+
+                <div class="grid grid--2">
+                    <div class="card">
+                        <div class="card__header">
+                            <h3>Alert Settings</h3>
+                        </div>
+                        <div class="card__body">
+                            <div class="form-group">
+                                <div class="flex justify-between items-center">
+                                    <label class="form-label">Email Notifications</label>
+                                    <label class="toggle">
+                                        <input type="checkbox" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email Address</label>
+                                <input type="email" class="form-control" value="admin@example.com">
+                            </div>
+                            <div class="form-group">
+                                <div class="flex justify-between items-center">
+                                    <label class="form-label">SMS Notifications</label>
+                                    <label class="toggle">
+                                        <input type="checkbox" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Phone Number</label>
+                                <input type="tel" class="form-control" value="+1 (555) 123-4567">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Alert Threshold</label>
+                                <select class="form-control">
+                                    <option>High Confidence Only (&gt; 80%)</option>
+                                    <option selected>Medium Confidence (&gt; 60%)</option>
+                                    <option>All Detections (&gt; 40%)</option>
+                                </select>
+                            </div>
+                            <button class="btn btn--primary">Save Settings</button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card__header">
+                            <h3>Recent Alerts</h3>
+                        </div>
+                        <div class="card__body">
+                            <div class="alert-history">
+                                <div style="display: flex; align-items: center; gap: var(--space-12); padding: var(--space-12); border: 1px solid var(--color-error); background: rgba(var(--color-error-rgb), 0.05); border-radius: var(--radius-base); margin-bottom: var(--space-12);">
+                                    <i class="fas fa-exclamation-triangle" style="color: var(--color-error);"></i>
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: var(--font-weight-medium);">Venomous Snake Detected</div>
+                                        <div style="color: var(--color-text-secondary); font-size: var(--font-size-sm);">Backyard Camera - 94% confidence</div>
+                                        <div style="color: var(--color-text-secondary); font-size: var(--font-size-xs);">Oct 14, 2024 8:15 PM</div>
+                                    </div>
+                                    <div style="display: flex; flex-direction: column; gap: var(--space-4);">
+                                        <span class="status status--success" style="font-size: var(--font-size-xs);">Email Sent</span>
+                                        <span class="status status--success" style="font-size: var(--font-size-xs);">SMS Sent</span>
+                                    </div>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: var(--space-12); padding: var(--space-12); border: 1px solid var(--color-warning); background: rgba(var(--color-warning-rgb), 0.05); border-radius: var(--radius-base); margin-bottom: var(--space-12);">
+                                    <i class="fas fa-info-circle" style="color: var(--color-warning);"></i>
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: var(--font-weight-medium);">Snake Detected</div>
+                                        <div style="color: var(--color-text-secondary); font-size: var(--font-size-sm);">Front Door Camera - 76% confidence</div>
+                                        <div style="color: var(--color-text-secondary); font-size: var(--font-size-xs);">Oct 15, 2024 2:22 PM</div>
+                                    </div>
+                                    <div style="display: flex; flex-direction: column; gap: var(--space-4);">
+                                        <span class="status status--success" style="font-size: var(--font-size-xs);">Email Sent</span>
+                                        <span class="status status--success" style="font-size: var(--font-size-xs);">SMS Sent</span>
+                                    </div>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: var(--space-12); padding: var(--space-12); border: 1px solid var(--color-success); background: rgba(var(--color-success-rgb), 0.05); border-radius: var(--radius-base);">
+                                    <i class="fas fa-check-circle" style="color: var(--color-success);"></i>
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: var(--font-weight-medium);">Training Complete</div>
+                                        <div style="color: var(--color-text-secondary); font-size: var(--font-size-sm);">Model accuracy improved to 94%</div>
+                                        <div style="color: var(--color-text-secondary); font-size: var(--font-size-xs);">Oct 10, 2024 3:30 PM</div>
+                                    </div>
+                                    <span class="status status--success" style="font-size: var(--font-size-xs);">Email Sent</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page" id="history">
+                <div class="page-header">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h1 class="page-title">Detection History</h1>
+                            <p class="page-subtitle">Complete log of all snake detections</p>
+                        </div>
+                        <button class="btn btn--outline">
+                            <i class="fas fa-download" style="margin-right: var(--space-8);"></i>
+                            Export CSV
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card mb-16">
+                    <div class="card__body">
+                        <div class="grid grid--4">
+                            <div class="form-group">
+                                <label class="form-label">Date Range</label>
+                                <select class="form-control">
+                                    <option>Last 7 days</option>
+                                    <option>Last 30 days</option>
+                                    <option>Last 3 months</option>
+                                    <option>All time</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Camera</label>
+                                <select class="form-control">
+                                    <option>All Cameras</option>
+                                    <option>Garden Camera</option>
+                                    <option>Front Door Camera</option>
+                                    <option>Backyard Camera</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Snake Type</label>
+                                <select class="form-control">
+                                    <option>All Types</option>
+                                    <option>Venomous Snake</option>
+                                    <option>Non-venomous Snake</option>
+                                    <option>Unknown</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">&nbsp;</label>
+                                <button class="btn btn--primary">Apply Filters</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card__body">
+                        <table class="history-table">
+                            <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Date &amp; Time</th>
+                                    <th>Camera</th>
+                                    <th>Snake Type</th>
+                                    <th>Confidence</th>
+                                    <th>Alert Sent</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><div class="detection-thumbnail" style="background: var(--color-bg-4);"></div></td>
+                                    <td>
+                                        <div>Oct 15, 2024</div>
+                                        <div style="color: var(--color-text-secondary); font-size: var(--font-size-sm);">2:22 PM</div>
+                                    </td>
+                                    <td>Front Door Camera</td>
+                                    <td>Snake</td>
+                                    <td>76%</td>
+                                    <td><span class="status status--success">Yes</span></td>
+                                    <td>
+                                        <button class="btn btn--sm btn--outline">View</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><div class="detection-thumbnail" style="background: var(--color-bg-3);"></div></td>
+                                    <td>
+                                        <div>Oct 15, 2024</div>
+                                        <div style="color: var(--color-text-secondary); font-size: var(--font-size-sm);">9:30 AM</div>
+                                    </td>
+                                    <td>Garden Camera</td>
+                                    <td>Non-venomous Snake</td>
+                                    <td>89%</td>
+                                    <td><span class="status status--success">Yes</span></td>
+                                    <td>
+                                        <button class="btn btn--sm btn--outline">View</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><div class="detection-thumbnail" style="background: var(--color-bg-4);"></div></td>
+                                    <td>
+                                        <div>Oct 14, 2024</div>
+                                        <div style="color: var(--color-text-secondary); font-size: var(--font-size-sm);">8:15 PM</div>
+                                    </td>
+                                    <td>Backyard Camera</td>
+                                    <td>Venomous Snake</td>
+                                    <td>94%</td>
+                                    <td><span class="status status--success">Yes</span></td>
+                                    <td>
+                                        <button class="btn btn--sm btn--outline">View</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page" id="settings">
+                <div class="page-header">
+                    <h1 class="page-title">Settings</h1>
+                    <p class="page-subtitle">Configure system preferences</p>
+                </div>
+
+                <div class="grid grid--2">
+                    <div class="card">
+                        <div class="card__header">
+                            <h3>General Settings</h3>
+                        </div>
+                        <div class="card__body">
+                            <div class="form-group">
+                                <label class="form-label">Detection Confidence Threshold</label>
+                                <select class="form-control">
+                                    <option>40%</option>
+                                    <option selected>50%</option>
+                                    <option>60%</option>
+                                    <option>70%</option>
+                                    <option>80%</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Maximum File Size</label>
+                                <select class="form-control">
+                                    <option>50MB</option>
+                                    <option selected>100MB</option>
+                                    <option>200MB</option>
+                                    <option>500MB</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <div class="flex justify-between items-center">
+                                    <label class="form-label">Auto-delete old detections</label>
+                                    <label class="toggle">
+                                        <input type="checkbox" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Keep detections for</label>
+                                <select class="form-control">
+                                    <option>30 days</option>
+                                    <option selected>90 days</option>
+                                    <option>180 days</option>
+                                    <option>1 year</option>
+                                </select>
+                            </div>
+                            <button class="btn btn--primary">Save Settings</button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card__header">
+                            <h3>Model Configuration</h3>
+                        </div>
+                        <div class="card__body">
+                            <div class="form-group">
+                                <label class="form-label">Active Model</label>
+                                <select class="form-control">
+                                    <option selected>YOLOv8 Snake Detection</option>
+                                    <option>YOLOv5 Snake Detection</option>
+                                    <option>Custom Model</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Training Epochs</label>
+                                <input type="number" class="form-control" value="100">
+                            </div>
+                            <div class="form-group">
+                                <div class="flex justify-between items-center">
+                                    <label class="form-label">Auto-retrain model</label>
+                                    <label class="toggle">
+                                        <input type="checkbox">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Retrain after new images</label>
+                                <select class="form-control">
+                                    <option>100 images</option>
+                                    <option selected>500 images</option>
+                                    <option>1000 images</option>
+                                </select>
+                            </div>
+                            <button class="btn btn--success">Update Model</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Global variables for state management
+        let currentPage = 'dashboard';
+        let uploadQueue = [];
+        let trainingInProgress = false;
+        let cameraFeeds = [
+            { id: 1, name: 'Garden Camera', url: 'rtsp://192.168.1.100:554/stream', status: 'active' },
+            { id: 2, name: 'Front Door Camera', url: 'rtsp://192.168.1.101:554/stream', status: 'active' },
+            { id: 3, name: 'Backyard Camera', url: 'rtsp://192.168.1.102:554/stream', status: 'inactive' }
+        ];
+        
+        // Navigation functionality
+        function initNavigation() {
+            const navItems = document.querySelectorAll('.nav-item');
+            const pages = document.querySelectorAll('.page');
+            
+            navItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const targetPage = item.dataset.page;
+                    
+                    // Update navigation active state
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    item.classList.add('active');
+                    
+                    // Update page visibility
+                    pages.forEach(page => page.classList.remove('active'));
+                    document.getElementById(targetPage).classList.add('active');
+                    
+                    currentPage = targetPage;
+
+                    // UPDATED: Close sidebar on mobile if it's open
+                    const sidebar = document.getElementById('sidebar');
+                    if (sidebar.classList.contains('open')) {
+                        toggleMobileMenu();
+                    }
+                });
+            });
+        }
+        
+        // File upload functionality
+        function initFileUpload() {
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('fileInput');
+            const progressContainer = document.getElementById('uploadProgress');
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            
+            // Drag and drop events
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+            
+            uploadArea.addEventListener('dragleave', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+            });
+            
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                const files = Array.from(e.dataTransfer.files);
+                handleFileUpload(files);
+            });
+            
+            // File input change
+            fileInput.addEventListener('change', (e) => {
+                const files = Array.from(e.target.files);
+                handleFileUpload(files);
+            });
+            
+            function handleFileUpload(files) {
+                if (files.length === 0) return;
+                
+                // Validate files
+                const validFiles = files.filter(file => {
+                    const validTypes = ['video/mp4', 'video/avi', 'video/quicktime', 'image/jpeg', 'image/png'];
+                    const maxSize = 100 * 1024 * 1024; // 100MB
+                    // A small fix: file.type might be empty, check extension too
+                    const extension = file.name.split('.').pop().toLowerCase();
+                    const validExtensions = ['mp4', 'avi', 'mov', 'jpg', 'jpeg', 'png'];
+                    
+                    return (validTypes.includes(file.type) || validExtensions.includes(extension)) && file.size <= maxSize;
+                });
+                
+                if (validFiles.length === 0) {
+                    showAlert('No valid files selected. Please check file types and sizes.', 'error');
+                    return;
+                }
+                
+                // Simulate upload progress
+                progressContainer.classList.remove('hidden');
+                let progress = 0;
+                
+                const uploadInterval = setInterval(() => {
+                    progress += Math.random() * 15;
+                    if (progress > 100) {
+                        progress = 100;
+                        clearInterval(uploadInterval);
+                        
+                        setTimeout(() => {
+                            progressContainer.classList.add('hidden');
+                            showAlert(`Successfully uploaded ${validFiles.length} file(s)`, 'success');
+                            
+                            // Reset progress
+                            progressBar.style.width = '0%';
+                            progressText.textContent = '0%';
+                            fileInput.value = '';
+                        }, 1000);
+                    }
+                    
+                    progressBar.style.width = progress + '%';
+                    progressText.textContent = Math.round(progress) + '%';
+                }, 200);
+            }
+        }
+        
+        // Training functionality
+        function startTraining() {
+            if (trainingInProgress) {
+                showAlert('Training is already in progress', 'warning');
+                return;
+            }
+            
+            trainingInProgress = true;
+            const progressElement = document.getElementById('trainingProgress');
+            const progressBar = document.getElementById('trainingBar');
+            
+            progressElement.textContent = 'Starting...';
+            
+            let epoch = 0;
+            const maxEpochs = 100;
+            
+            const trainingInterval = setInterval(() => {
+                epoch += Math.floor(Math.random() * 3) + 1;
+                
+                if (epoch >= maxEpochs) {
+                    epoch = maxEpochs;
+                    clearInterval(trainingInterval);
+                    progressElement.textContent = 'Training Complete!';
+                    trainingInProgress = false;
+                    showAlert('Model training completed successfully!', 'success');
+                } else {
+                    progressElement.textContent = `Epoch ${epoch}/${maxEpochs}`;
+                }
+                
+                const progress = (epoch / maxEpochs) * 100;
+                progressBar.style.width = progress + '%';
+            }, 500);
+        }
+        
+        // Camera feed management
+        function addCameraFeed() {
+            const nameInput = document.getElementById('cameraName');
+            const urlInput = document.getElementById('streamUrl');
+            
+            const name = nameInput.value.trim();
+            const url = urlInput.value.trim();
+            
+            if (!name || !url) {
+                showAlert('Please fill in both camera name and stream URL', 'error');
+                return;
+            }
+            
+            const newFeed = {
+                id: Date.now(),
+                name: name,
+                url: url,
+                status: 'active'
+            };
+            
+            cameraFeeds.push(newFeed);
+            
+            // Clear inputs
+            nameInput.value = '';
+            urlInput.value = '';
+            
+            showAlert(`Camera "${name}" added successfully`, 'success');
+            // In a real app, you would now re-render the live feed list
+        }
+        
+        // Alert system
+        function showAlert(message, type = 'info') {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert--${type}`;
+            alertDiv.innerHTML = `
+                <i class="fas fa-${getAlertIcon(type)}"></i>
+                <span>${message}</span>
+            `;
+            alertDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 2000; /* High z-index */
+                min-width: 300px;
+                box-shadow: var(--shadow-lg);
+                display: flex;
+                align-items: center;
+                gap: var(--space-12);
+            `;
+            
+            document.body.appendChild(alertDiv);
+            
+            setTimeout(() => {
+                alertDiv.style.transition = 'opacity 0.5s ease';
+                alertDiv.style.opacity = '0';
+                setTimeout(() => alertDiv.remove(), 500);
+            }, 5000);
+        }
+        
+        function getAlertIcon(type) {
+            switch (type) {
+                case 'success': return 'check-circle';
+                case 'error': return 'exclamation-triangle';
+                case 'warning': return 'exclamation-circle';
+                default: return 'info-circle';
+            }
+        }
+        
+        // Simulate real-time detection
+        function simulateDetection() {
+            setInterval(() => {
+                if (Math.random() < 0.1) { // 10% chance every 10 seconds
+                    const detectionTypes = ['Snake', 'Venomous Snake', 'Non-venomous Snake'];
+                    const cameras = ['Garden Camera', 'Front Door Camera', 'Backyard Camera'];
+                    const confidences = [0.65, 0.72, 0.81, 0.89, 0.94];
+                    
+                    const detection = {
+                        type: detectionTypes[Math.floor(Math.random() * detectionTypes.length)],
+                        camera: cameras[Math.floor(Math.random() * cameras.length)],
+                        confidence: confidences[Math.floor(Math.random() * confidences.length)],
+                        timestamp: new Date()
+                    };
+                    
+                    showAlert(
+                        `${detection.type} detected on ${detection.camera} (${Math.round(detection.confidence * 100)}% confidence)`,
+                        detection.type.includes('Venomous') ? 'error' : 'warning'
+                    );
+                }
+            }, 10000);
+        }
+
+        // --- NEW/UPDATED MOBILE MENU LOGIC ---
+
+        // Toggles the sidebar and overlay
+        function toggleMobileMenu() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('open');
+        }
+
+        // Sets up listeners for the mobile menu
+        function initMobileMenu() {
+            const mobileButton = document.getElementById('mobileMenuToggle');
+            const overlay = document.getElementById('sidebarOverlay');
+            
+            if (mobileButton) {
+                mobileButton.addEventListener('click', toggleMobileMenu);
+            }
+            
+            if (overlay) {
+                overlay.addEventListener('click', toggleMobileMenu);
+            }
+        }
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', () => {
+            initNavigation();
+            initFileUpload();
+            initMobileMenu(); // Replaces the old JS button logic
+            simulateDetection();
+            
+            // Show welcome message
+            setTimeout(() => {
+                showAlert('Snake Detection System initialized successfully!', 'success');
+            }, 1000);
+        });
+        
+    </script>
+</body>
+</html>
