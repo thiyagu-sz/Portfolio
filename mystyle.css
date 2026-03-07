@@ -1459,55 +1459,121 @@ noscript {
         font-size: 50%;
     }
     
+    main {
+        margin-top: 80px;
+    }
+
+    .navbar {
+        height: 60px;
+        width: 90%;
+        top: 10px;
+        padding: 0 15px;
+    }
+
+    .logo {
+        width: 40px;
+        height: 40px;
+    }
+
+    .hamburger {
+        display: flex;
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1001;
+        height: auto;
+    }
+
+    .hamburgerbase {
+        height: 40px;
+        width: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .setting-container {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        margin-left: 0;
+        z-index: 1001;
+        width: auto;
+        height: auto;
+        padding: 0;
+        gap: 10px;
+    }
+
+    #labelforsetting,
+    #labelforsound,
+    #labelforvisualmode {
+        width: 32px;
+        height: 32px;
+        background-size: 60%;
+    }
+
     .text-content {
         padding-left: 0;
-        width: 80%;
+        width: 90%;
+        margin: 0 auto;
     }
     
     #hello-friend {
-        height: 100px;
-        font-size: 3.5rem;
+        height: auto;
+        font-size: 3rem;
+        margin-top: 20px;
     }
     
     #name,
     #work {
-        font-size: 5.5rem;
+        font-size: 4.5rem;
     }
     
     #info-para,
     .language-name {
         width: 100%;
+        font-size: 1.8rem;
     }
     
     .contact-btn-div {
-        height: 140px;
+        height: auto;
         display: flex;
-        flex-direction: column-reverse;
-        align-items: flex-start;
+        flex-direction: row;
+        align-items: center;
         justify-content: flex-start;
-        gap: 20px;
+        gap: 15px;
+        padding-top: 20px;
     }
     
-    .setting-container {
-        margin-left: 0;
+    .about-section-container {
+        padding-top: 80px;
+        position: relative;
+        z-index: 1005;
+        background-color: var(--color-dark-mode);
     }
-    
+
+    .projects-section-container,
+    .skills-section-container {
+        position: relative;
+        z-index: 1005;
+        background-color: var(--color-dark-mode);
+    }
+
+    .blob {
+        z-index: -1;
+    }
+
+    .dp img {
+        width: 250px;
+    }
+
     .dp::after,
     .dp::before {
         display: none;
     }
     
-    .logo {
-        width: 18%;
-    }
-    
-    .logo:hover {
-        transform: translateY(200px);
-        transition-duration: 1s;
-    }
-    
     .projects-section-div {
-        width: 80%;
+        width: 90%;
     }
     
     .project-boxes-div {
